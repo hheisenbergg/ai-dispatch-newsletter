@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Anti-Hype Dispatch</title>
+  <style>
+    /* 🎨 COLOR PALETTE CONTROL CENTER */
+    :root {
+      /* OPTION 1: THE HIGHLIGHTER (Raw, Tech, High-Energy) - CURRENT ACTIVE */
+     /* --bg-page: #f0f0f0;
+      --bg-card: #ffffff;
+      --ink: #000000;
+      --accent-main: #ccff00;  /* Acid Lime/Yellow */
+     /* --accent-secondary: #ff00ff; /* Hot Magenta */
+     /* --accent-tertiary: #00ffff;  /* Cyan */
+      
+      /* OPTION 2: THE NEWSPAPER (Serious, Orange, Clean)
+      --bg-page: #e6e6e6;
+      --bg-card: #fdfbf7;
+      --ink: #1a1a1a;
+      --accent-main: #ff4d00;  (International Orange)
+      --accent-secondary: #fff;
+      --accent-tertiary: #dcdcdc;
+      */
+
+      /* OPTION 3: THE SOFT POP (Friendly, Pastel, Chill) */
+      --bg-page: #f2f0e9;
+      --bg-card: #fff;
+      --ink: #111;
+      --accent-main: #ffc2c9; 
+      --accent-secondary: #fff3cd;
+      --accent-tertiary: #c2e2ff; 
+     
+
+      /* SHARED STYLES */
+      --border: 3px solid var(--ink);
+      --shadow: 8px 8px 0px var(--ink); /* Deep, heavy shadow */
+      --radius: 12px;
+      
+      /* FONTS */
+      --font-serif: 'Georgia', serif;
+      --font-mono: 'Courier New', Courier, monospace;
+      --font-sans: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg-page);
+      /* Dot grid pattern */
+      background-image: radial-gradient(var(--ink) 1px, transparent 1px);
+      background-size: 20px 20px;
+      font-family: var(--font-sans);
+      color: var(--ink);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 580px;
+      background: var(--bg-card);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* HEADER */
+    .header {
+      padding: 40px 30px 20px 30px;
+      text-align: center;
+      border-bottom: var(--border);
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 3.2rem;
+      margin: 0;
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 0.9;
+    }
+
+    .sticker {
+      display: inline-block;
+      background: var(--accent-main);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      padding: 5px 10px;
+      border: 2px solid var(--ink);
+      transform: rotate(-3deg) translateY(-10px);
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+    }
+
+    /* CONTENT */
+    .content { padding: 30px; }
+
+    .intro {
+      font-size: 1.15rem;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    /* THE BENTO BOXES */
+    .bento {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    
+    @media (max-width: 500px) { .bento { grid-template-columns: 1fr; } }
+
+    .bento-box {
+      border: var(--border);
+      border-radius: var(--radius);
+      padding: 15px;
+      background: #fff;
+      transition: transform 0.1s;
+    }
+    .bento-box:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+    }
+
+    .bento-label {
+      font-family: var(--font-mono);
+      font-weight: 900;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: #fff;
+      display: inline-block;
+      padding: 2px 6px;
+      margin-bottom: 8px;
+    }
+
+    ul { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 5px; font-size: 0.95rem; }
+
+    /* FORM SECTION */
+    .action-zone {
+      background: var(--accent-secondary);
+      border-top: var(--border);
+      padding: 30px;
+      text-align: center;
+    }
+    
+    /* Used for the "Highlighter" theme to keep the form distinct */
+    .action-zone.highlighter-mode {
+       background: #111;
+       color: #fff;
+    }
+
+    input {
+      width: 100%;
+      border: var(--border);
+      border-radius: 8px;
+      padding: 15px;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      outline: none;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
+    input:focus { background: var(--accent-main); }
+
+    button {
+      width: 100%;
+      background: var(--accent-main);
+      color: var(--ink);
+      border: var(--border);
+      border-radius: 8px;
+      padding: 15px;
+      font-family: var(--font-mono);
+      font-weight: 900;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 5px 5px 0 rgba(0,0,0,1);
+      transition: all 0.1s;
+    }
+    button:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 3px 3px 0 rgba(0,0,0,1);
+    }
+    
+    .footer {
+      text-align: center;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      padding: 15px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="header">
+      <div class="sticker">Hypeless since 2026</div>
+      <h1>The AI<br>Dispatch.</h1>
+    </div>
+
+    <div class="content">
+      <p class="intro">
+        <strong>Your timeline is a dumpster fire.</strong><br>
+        Everyone is a guru. Everything is "game-changing." It's exhausting.
+      </p>
+      
+      <p style="font-style: italic; background: var(--accent-main); display: inline; padding: 0 4px; border-radius: 4px;">
+        We are the mute button for the noise.
+      </p>
+
+      <div class="bento">
+        <div class="bento-box" style="background: var(--accent-tertiary);">
+          <div class="bento-label">Frequency</div>
+          <div style="font-weight: 800; font-size: 1.1rem;">
+            3x / Week.<br>
+            5 min read.<br>
+            Zero yapping.
+          </div>
+        </div>
+
+        <div class="bento-box">
+          <div class="bento-label">The Goods</div>
+          <ul>
+            <li>Signal-only stories</li>
+            <li>The gist, not the scrolls</li>
+            <li>One takeaway that matters</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-zone highlighter-mode">
+      <div style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; margin-bottom: 15px;">
+        Get the download.
+      </div>
+
+      <form id="form">
+        <input id="email" type="email" placeholder="YOUR@COORDINATES.COM" required />
+        <button id="btn" type="submit">Unlock Signal →</button>
+      </form>
+      
+      <div id="msg" style="margin-top:15px; font-family:var(--font-mono); font-size:0.9rem;"></div>
+      
+      <div style="margin-top:15px; font-size: 0.8rem; font-family: var(--font-mono); opacity: 0.7;">
+        Unsubscribe anytime. No drama.
+      </div>
+    </div>
+
+    <div class="footer">
+      Built quietly. Sent thoughtfully.
+    </div>
+  </div>
+
+<script>
+  const form = document.getElementById("form");
+  const emailEl = document.getElementById("email");
+  const msgEl = document.getElementById("msg");
+  const btn = document.getElementById("btn");
+
+  const setMsg = (text, color) => {
+    msgEl.style.color = color || "#fff";
+    msgEl.textContent = text;
+  };
+
+  // ✨ frontend owns the vibe
+  const COPY = {
+    subscribed: ">> you're in. welcome to the ai dispatch ✨",
+    already_subscribed: ">> bestie… you're already on the list 😌",
+    invalid_email: ">> that email looks a lil fake. try again? 👀",
+    rate_limited: ">> chill 😭 too many tries. come back in a bit.",
+    error: ">> we fumbled. retry?",
+    default: ">> something weird happened. try again in a sec?",
+    network: ">> network said no. try again?",
+  };
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = emailEl.value.trim();
+    if (!email) return;
+
+    btn.disabled = true;
+    btn.innerText = "⏳ PROCESSING...";
+
+    try {
+      // 🔒 Calls secure server-side proxy (webhook URL stays hidden)
+      const res = await fetch('/api/subscribe', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      // If n8n returns nothing / non-JSON, treat as "default"
+      let data = null;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
+
+      // Nothing usable returned (empty body / non-JSON / crash)
+      if (!data || typeof data !== "object") {
+        setMsg(COPY.default, "#ff00ff");
+        btn.innerText = "UNLOCK SIGNAL →";
+        btn.disabled = false;
+        return;
+      }
+
+      const ok = data.ok === true;
+      const status = (data.status || (ok ? "subscribed" : "error")).toString();
+
+      if (ok) {
+        setMsg(COPY.subscribed, "#ccff00");
+        form.reset();
+        btn.innerText = "DONE";
+        btn.disabled = true;
+        return;
+      }
+
+      // Known statuses → vibe copy; unknown → backend error vibe
+      const msg = COPY[status] || COPY.error;
+      setMsg(msg, "#ff00ff");
+      btn.innerText = "UNLOCK SIGNAL →";
+      btn.disabled = false;
+
+    } catch (err) {
+      // Network / fetch failed entirely
+      setMsg(COPY.network, "#ff00ff");
+      btn.innerText = "UNLOCK SIGNAL →";
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
