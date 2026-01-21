@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unsubscribe - The AI Dispatch</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* 🎨 PAGE SPECIFIC STYLES */
+        body {
+            padding: 20px;
+            padding-bottom: 60px;
+        }
+
+        .card-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .card {
+            width: 100%;
+            background: var(--bg-card);
+            border: var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            padding: 40px 30px 20px 30px;
+            text-align: center;
+            border-bottom: var(--border);
+        }
+
+        h1 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .sticker {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--ink);
+            font-family: var(--font-mono);
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border: 2px solid var(--ink);
+            transform: rotate(-2deg) translateY(-8px);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 25px;
+        }
+
+        /* ACTION ZONE - Dark like signup */
+        .action-zone {
+            background: #111;
+            color: #fff;
+            border-top: var(--border);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .action-zone.flash-success {
+            animation: flash-green 0.3s ease-out;
+        }
+
+        @keyframes flash-green {
+            0% {
+                background: #ccff00;
+            }
+
+            100% {
+                background: #111;
+            }
+        }
+
+        button {
+            background: var(--accent);
+            color: var(--ink);
+            border: var(--border);
+            border-radius: 8px;
+            padding: 15px 40px;
+            font-family: var(--font-mono);
+            font-weight: 900;
+            font-size: 1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 5px 5px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.1s;
+        }
+
+        button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #msg {
+            margin-top: 15px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            min-height: 1.2em;
+        }
+
+        /* FOOTER */
+        .footer {
+            padding: 15px 30px;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            opacity: 0.5;
+            border-top: var(--border);
+        }
+
+        .footer a {
+            color: var(--ink);
+        }
+
+        /* No token state */
+        .no-token {
+            font-family: var(--font-mono);
+            color: #ff00ff;
+            line-height: 1.6;
+        }
+
+        /* TOY MASCOT */
+        #wave-mascot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 210px;
+            z-index: 100;
+            image-rendering: pixelated;
+            pointer-events: none;
+        }
+
+        /* MOBILE LAYOUT */
+        @media (max-width: 850px) {
+            #wave-mascot {
+                position: relative;
+                display: block;
+                bottom: auto;
+                right: auto;
+                margin: 0 auto -50px auto;
+                z-index: 10;
+                /* Scale down slightly on mobile */
+                transform: scale(0.9);
+            }
+
+            .card-wrapper {
+                display: flex;
+                flex-direction: column-reverse;
+                align-items: center;
+                margin-bottom: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="dot-canvas"></canvas>
+
+    <div class="card-wrapper">
+        <canvas id="wave-mascot"></canvas>
+        <div class="card">
+            <div class="header">
+                <div class="sticker">left on read 📉</div>
+                <h1>unsubscribe era</h1>
+            </div>
+
+            <div class="content">
+                <div class="subtitle">damn. okay. we see how it is.</div>
+                <div id="content">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="action-zone" id="action-zone">
+                <!-- Button populated by JS -->
+            </div>
+
+            <div class="footer" id="footer">
+                <a href="/">← Back to homepage</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const contentEl = document.getElementById('content');
+        const actionZone = document.getElementById('action-zone');
+
+        // Get token from URL
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+
+        if (!token || token.length < 10) {
+            contentEl.innerHTML = `
+                <div class="no-token">
+                    >> ghosted? link missing or broken.<br>
+                    check your email bestie.
+                </div>
+            `;
+            actionZone.style.display = 'none';
+            document.getElementById('footer').style.padding = '30px';
+        } else {
+            contentEl.innerHTML = `
+                <div style="font-family: var(--font-mono); font-size: 0.95rem; line-height: 1.6;">
+                    click below to make it official (sad vibes only).
+                </div>
+            `;
+            actionZone.innerHTML = `
+                <button id="btn">yeet me out 💔</button>
+                <div id="msg"></div>
+            `;
+
+            const btn = document.getElementById('btn');
+            const msgEl = document.getElementById('msg');
+            let msgTimeout = null;
+
+            const setMsg = (text, color, autoClear = true) => {
+                msgEl.style.color = color || "#fff";
+                msgEl.textContent = text;
+                if (msgTimeout) clearTimeout(msgTimeout);
+                if (autoClear) {
+                    msgTimeout = setTimeout(() => {
+                        msgEl.textContent = "";
+                    }, 5000);
+                }
+            };
+
+            const resetUI = () => {
+                btn.innerText = 'yeet me out 💔';
+                btn.style.background = '';
+                btn.disabled = false;
+                setMsg("", "");
+                window.dispatchEvent(new CustomEvent('mascotState', { detail: 'idle' }));
+            };
+
+            btn.addEventListener('click', async () => {
+                btn.disabled = true;
+                btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;">⏳</span> hold up...';
+
+                // Trigger mascot LOOKING state
+                window.dispatchEvent(new CustomEvent('mascotState', { detail: 'looking' }));
+
+                try {
+                    const res = await fetch('/api/unsubscribe', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token }),
+                    });
+
+                    const data = await res.json();
+
+                    if (data.ok) {
+                        // Success flash
+                        actionZone.classList.add('flash-success');
+                        setTimeout(() => actionZone.classList.remove('flash-success'), 300);
+
+                        setMsg(">> bet. we out. no hard feelings. ✌️", "#ccff00", false);
+                        btn.innerText = 'Unsubscribed ✓';
+                        btn.style.background = '#ccff00';
+
+                        // Trigger mascot SAD state
+                        window.dispatchEvent(new CustomEvent('mascotState', { detail: 'sad' }));
+
+                        // Reset after delay
+                        setTimeout(resetUI, 6000);
+                    } else if (data.status === 'invalid_token') {
+                        setMsg(">> bruh. link expired or fake.", "#ff00ff");
+                        btn.innerText = 'Invalid Link';
+                        // Keep button disabled
+
+                        // Reset to idle immediately to stop "looking"
+                        setTimeout(() => window.dispatchEvent(new CustomEvent('mascotState', { detail: 'idle' })), 50);
+
+                        // Full reset after 4s
+                        setTimeout(resetUI, 4000);
+                    } else if (data.status === 'already_unsubscribed') {
+                        setMsg(">> chill, you already left. 🕊️", "#ff00ff", false);
+                        btn.innerText = 'Already Done';
+
+                        // Reset to idle immediately
+                        setTimeout(() => window.dispatchEvent(new CustomEvent('mascotState', { detail: 'idle' })), 50);
+
+                        // Full reset after 4s
+                        setTimeout(resetUI, 4000);
+                    } else {
+                        setMsg(">> big yikes. something broke. try again?", "#ff00ff");
+                        btn.innerText = 'Error';
+                        // Keep button disabled
+
+                        // Reset to idle on unknown error
+                        setTimeout(() => window.dispatchEvent(new CustomEvent('mascotState', { detail: 'idle' })), 50);
+
+                        // Full reset after 4s
+                        setTimeout(resetUI, 4000);
+                    }
+                } catch (err) {
+                    setMsg(">> wifi acting up? network error.", "#ff00ff");
+                    btn.innerText = 'Network Error';
+                    // Keep button disabled
+
+                    // Reset mascot to idle on network error
+                    setTimeout(() => window.dispatchEvent(new CustomEvent('mascotState', { detail: 'idle' })), 50);
+
+                    // Full reset after 4s
+                    setTimeout(resetUI, 4000);
+                }
+            });
+        }
+
+        // Spin animation for loading
+        const style = document.createElement('style');
+        style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
+        document.head.appendChild(style);
+    </script>
+
+    <!-- 🎨 DOT GRID BACKGROUND -->
+    <script>
+        const canvas = document.getElementById('dot-canvas');
+        const ctx = canvas.getContext('2d');
+
+        const CONFIG = {
+            dotSize: 2,
+            gap: 32,
+            baseColor: '#b0b0b0',
+            activeColor: '#ffc2c9',
+            proximity: 200,
+            maxSpeed: 20,
+            friction: 0.92,
+            spring: 0.05,
+            shockRadius: 300,
+            shockStrength: 15
+        };
+
+        let width, height, dpr;
+        let dots = [];
+
+        const mouse = {
+            x: -1000, y: -1000,
+            vx: 0, vy: 0
+        };
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : { r: 0, g: 0, b: 0 };
+        }
+
+        const baseRgb = hexToRgb(CONFIG.baseColor);
+        const activeRgb = hexToRgb(CONFIG.activeColor);
+
+        class Dot {
+            constructor(x, y) {
+                this.baseX = x; this.baseY = y;
+                this.x = x; this.y = y;
+                this.vx = 0; this.vy = 0;
+            }
+
+            update() {
+                const dx = this.baseX - this.x;
+                const dy = this.baseY - this.y;
+                this.vx += dx * CONFIG.spring;
+                this.vy += dy * CONFIG.spring;
+                this.vx *= CONFIG.friction;
+                this.vy *= CONFIG.friction;
+
+                const dxMouse = this.x - mouse.x;
+                const dyMouse = this.y - mouse.y;
+                const dist = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+                if (dist < CONFIG.proximity) {
+                    const force = (1 - dist / CONFIG.proximity);
+                    if (Math.abs(mouse.vx) > 0.5 || Math.abs(mouse.vy) > 0.5) {
+                        this.vx += mouse.vx * force * 0.05;
+                        this.vy += mouse.vy * force * 0.05;
+                    }
+                }
+
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw() {
+                const disp = Math.sqrt((this.x - this.baseX) ** 2 + (this.y - this.baseY) ** 2);
+                const ratio = Math.min(disp / 40, 1);
+
+                const r = Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * ratio);
+                const g = Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * ratio);
+                const b = Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * ratio);
+
+                ctx.fillStyle = `rgb(${r},${g},${b})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, CONFIG.dotSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            explode(cx, cy) {
+                const dx = this.x - cx;
+                const dy = this.y - cy;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < CONFIG.shockRadius) {
+                    const force = (1 - dist / CONFIG.shockRadius) * CONFIG.shockStrength;
+                    const angle = Math.atan2(dy, dx);
+                    this.vx += Math.cos(angle) * force;
+                    this.vy += Math.sin(angle) * force;
+                }
+            }
+        }
+
+        function init() {
+            dpr = window.devicePixelRatio || 1;
+            width = window.innerWidth;
+            height = window.innerHeight;
+
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.scale(dpr, dpr);
+
+            dots = [];
+            const cols = Math.floor(width / CONFIG.gap);
+            const rows = Math.floor(height / CONFIG.gap);
+            const startX = (width - cols * CONFIG.gap) / 2;
+            const startY = (height - rows * CONFIG.gap) / 2;
+
+            for (let i = 0; i <= cols; i++) {
+                for (let j = 0; j <= rows; j++) {
+                    dots.push(new Dot(startX + i * CONFIG.gap, startY + j * CONFIG.gap));
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            dots.forEach(dot => { dot.update(); dot.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        let mouseTimeout;
+        window.addEventListener('mousemove', e => {
+            clearTimeout(mouseTimeout);
+            mouse.vx = Math.max(Math.min(e.clientX - mouse.x, CONFIG.maxSpeed), -CONFIG.maxSpeed);
+            mouse.vy = Math.max(Math.min(e.clientY - mouse.y, CONFIG.maxSpeed), -CONFIG.maxSpeed);
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouseTimeout = setTimeout(() => { mouse.vx = 0; mouse.vy = 0; }, 50);
+        });
+
+        window.addEventListener('click', e => {
+            dots.forEach(dot => dot.explode(e.clientX, e.clientY));
+        });
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(init, 100);
+        });
+
+        init();
+        animate();
+    </script>
+
+    <!-- 🧸 MASCOT - Toy Story Inspired (High Detail + Jessie) -->
+    <script>
+        (function () {
+            const wCanvas = document.getElementById('wave-mascot');
+            const wCtx = wCanvas.getContext('2d');
+            const scale = 3; // Bigger scale
+            let frame = 0;
+            let state = 'idle'; // 'idle', 'looking', 'sad'
+
+            // Listen for state changes
+            window.addEventListener('mascotState', (e) => {
+                state = e.detail;
+            });
+
+            function resize() {
+                // Large canvas for high detail
+                wCanvas.width = 200 * scale;
+                wCanvas.height = 120 * scale;
+                // Responsive CSS size
+                wCanvas.style.width = '350px';
+                wCanvas.style.height = '210px';
+
+                wCtx.imageSmoothingEnabled = false;
+                wCtx.setTransform(1, 0, 0, 1, 0, 0);
+                wCtx.scale(scale, scale);
+            }
+            resize();
+
+            function drawPixel(x, y, color) {
+                wCtx.fillStyle = color;
+                wCtx.fillRect(Math.floor(x), Math.floor(y), 1, 1);
+            }
+
+            function drawRect(x, y, w, h, color) {
+                wCtx.fillStyle = color;
+                wCtx.fillRect(Math.floor(x), Math.floor(y), w, h);
+            }
+
+            // Colors
+            const c = {
+                outline: '#111',
+                // Woody
+                wHat: '#8B4513', wSkin: '#FFDEAD', wShirt: '#FFD700', wVest: '#F5F5F5', wJeans: '#4169E1', wBoots: '#8B4513', wRed: '#CD5C5C',
+                // Buzz
+                bHelm: '#E0FFFF', bSkin: '#FFDEAD', bWhite: '#F0F0F0', bGreen: '#32CD32', bPurple: '#8A2BE2', bGrey: '#A9A9A9',
+                // Rex
+                rSkin: '#32CD32', rBelly: '#98FB98', rTooth: '#FFF',
+                // Hamm
+                hSkin: '#FFB6C1', hSnout: '#FF69B4',
+                // Alien
+                aSkin: '#7CFC00', aSuit: '#4169E1', aPurple: '#8A2BE2',
+                // Jessie
+                jHat: '#A0522D', jHair: '#B22222', jSkin: '#FFDEAD', jShirt: '#FFF', jChaps: '#FFF', jJeans: '#4169E1'
+            };
+
+            // Draw Woody
+            function drawWoody(x, y, s) {
+                // Hat
+                drawRect(x - 1, y - 8, 14, 2, c.wHat);
+                drawRect(x + 1, y - 12, 10, 4, c.wHat);
+
+                // Head
+                drawRect(x + 2, y - 6, 8, 7, c.wSkin);
+
+                // Shirt (Yellow)
+                drawRect(x + 1, y + 1, 10, 9, c.wShirt);
+                // Checks (Red grid)
+                if (frame % 2 === 0) {
+                    drawPixel(x + 2, y + 2, c.wRed); drawPixel(x + 5, y + 2, c.wRed); drawPixel(x + 8, y + 2, c.wRed);
+                    drawPixel(x + 3, y + 5, c.wRed); drawPixel(x + 6, y + 5, c.wRed); drawPixel(x + 9, y + 5, c.wRed);
+                }
+
+                // Vest (Cow print)
+                drawRect(x + 1, y + 1, 2, 4, c.wVest); drawPixel(x + 1, y + 2, '#000');
+                drawRect(x + 9, y + 1, 2, 4, c.wVest); drawPixel(x + 10, y + 3, '#000');
+
+                // Jeans
+                drawRect(x + 2, y + 10, 3, 6, c.wJeans);
+                drawRect(x + 7, y + 10, 3, 6, c.wJeans);
+
+                // Boots
+                drawRect(x + 1, y + 16, 4, 2, c.wBoots);
+                drawRect(x + 7, y + 16, 4, 2, c.wBoots);
+
+                // Arms
+                if (s === 'wave') {
+                    // Right arm wave
+                    const off = Math.sin(frame * 0.3) * 2;
+                    drawRect(x + 11, y + 2 - off, 2, 6, c.wShirt);
+                    drawRect(x + 11, y - off, 3, 3, c.wSkin); // Hand
+                    // Left down
+                    drawRect(x - 1, y + 2, 2, 6, c.wShirt);
+                } else if (s === 'freeze') {
+                    // Arms weird
+                    drawRect(x - 1, y + 1, 2, 6, c.wShirt);
+                    drawRect(x + 11, y + 1, 2, 6, c.wShirt);
+                } else {
+                    // Idle
+                    drawRect(x - 1, y + 2, 2, 6, c.wShirt);
+                    drawRect(x + 11, y + 2, 2, 6, c.wShirt);
+                }
+
+                // Face Features
+                if (s === 'sad') {
+                    drawPixel(x + 3, y - 3, c.outline); drawPixel(x + 8, y - 3, c.outline); // Eyes
+                    drawPixel(x + 4, y - 1, c.outline); drawPixel(x + 7, y - 1, c.outline); // Frown
+                    if (frame % 20 < 10) drawPixel(x + 3, y - 2, '#00F'); // Tear
+                } else if (s === 'freeze') {
+                    drawRect(x + 3, y - 4, 2, 2, '#FFF'); drawPixel(x + 4, y - 4, '#000');
+                    drawRect(x + 7, y - 4, 2, 2, '#FFF'); drawPixel(x + 7, y - 4, '#000');
+                    drawRect(x + 5, y - 1, 2, 2, c.outline); // O Mouth
+                } else {
+                    drawPixel(x + 4, y - 3, c.outline); drawPixel(x + 7, y - 3, c.outline);
+                    drawPixel(x + 4, y - 1, c.outline); drawPixel(x + 5, y, c.outline); drawPixel(x + 6, y, c.outline); drawPixel(x + 7, y - 1, c.outline); // Smile
+                }
+            }
+
+            // Draw Buzz
+            function drawBuzz(x, y, s) {
+                // Wings (if flying/happy)
+                if (s === 'idle') {
+                    drawRect(x - 4, y + 2, 4, 6, c.bPurple); drawRect(x - 4, y + 2, 1, 6, c.bGreen);
+                    drawRect(x + 12, y + 2, 4, 6, c.bPurple); drawRect(x + 15, y + 2, 1, 6, c.bGreen);
+                }
+
+                // Head (dome)
+                drawRect(x + 2, y - 6, 8, 8, c.bHelm);
+                drawRect(x + 3, y - 4, 6, 5, c.bSkin); // Face
+                drawRect(x + 3, y - 4, 6, 1, c.bPurple); // Hood
+
+                // Body
+                drawRect(x + 1, y + 2, 10, 8, c.bWhite);
+                drawRect(x + 1, y + 2, 10, 2, c.bGreen); // Chest piece
+                drawPixel(x + 5, y + 3, '#00F'); // Blue button
+                drawPixel(x + 7, y + 3, '#F00'); // Red button
+
+                // Legs
+                drawRect(x + 2, y + 10, 3, 6, c.bWhite); drawRect(x + 2, y + 14, 3, 2, c.bGreen);
+                drawRect(x + 7, y + 10, 3, 6, c.bWhite); drawRect(x + 7, y + 14, 3, 2, c.bGreen);
+
+                // Arms
+                if (s === 'wave') {
+                    drawRect(x + 11, y + 2, 2, 6, c.bWhite); drawRect(x + 11, y, 2, 2, c.bWhite); // Up
+                    drawRect(x - 1, y + 2, 2, 6, c.bWhite);
+                } else {
+                    drawRect(x - 1, y + 2, 2, 6, c.bWhite);
+                    drawRect(x + 11, y + 2, 2, 6, c.bWhite);
+                }
+
+                // Face Features
+                if (s === 'sad') {
+                    drawPixel(x + 4, y - 2, c.outline); drawPixel(x + 7, y - 2, c.outline); // Eyes
+                    drawPixel(x + 5, y, c.outline); drawPixel(x + 6, y, c.outline); // Frown
+                } else if (s === 'freeze') {
+                    drawRect(x + 4, y - 3, 2, 2, '#FFF'); drawPixel(x + 5, y - 3, '#000');
+                    drawRect(x + 7, y - 3, 2, 2, '#FFF'); drawPixel(x + 7, y - 3, '#000');
+                } else {
+                    drawPixel(x + 5, y - 2, c.outline); drawPixel(x + 7, y - 2, c.outline);
+                    drawRect(x + 5, y, 3, 1, c.outline); // Smile
+                }
+            }
+
+            // Draw Alien
+            function drawAlien(x, y, s) {
+                // Head
+                drawRect(x + 1, y - 5, 10, 6, c.aSkin);
+                drawRect(x + 5, y - 8, 2, 3, c.aSkin); drawPixel(x + 5, y - 9, c.aSkin); // Antenna
+
+                // Eyes (3)
+                drawPixel(x + 2, y - 3, '#FFF'); drawPixel(x + 3, y - 3, c.outline);
+                drawPixel(x + 5, y - 2, '#FFF'); drawPixel(x + 6, y - 2, c.outline);
+                drawPixel(x + 8, y - 3, '#FFF'); drawPixel(x + 9, y - 3, c.outline);
+
+                // Body
+                drawRect(x + 2, y + 1, 8, 8, c.aSuit);
+                drawRect(x - 1, y + 1, 14, 2, c.aSuit); // Arms out always (Oooo)
+                drawRect(x + 2, y + 1, 8, 2, c.aPurple); // Collar
+                drawPixel(x + 8, y + 3, c.aPurple); // Planet badge
+
+                // Legs
+                drawRect(x + 3, y + 9, 2, 4, c.aSuit);
+                drawRect(x + 7, y + 9, 2, 4, c.aSuit);
+
+                if (s === 'freeze') {
+                    // Mouth O
+                    drawRect(x + 5, y - 1, 2, 2, c.outline);
+                }
+            }
+
+            // Draw Rex
+            function drawRex(x, y, s) {
+                // Head
+                drawRect(x + 2, y - 10, 10, 8, c.rSkin);
+                drawRect(x + 8, y - 6, 6, 4, c.rSkin); // Snout
+                drawPixel(x + 9, y - 5, c.rTooth); drawPixel(x + 11, y - 5, c.rTooth);
+
+                // Body
+                drawRect(x, y - 2, 12, 12, c.rSkin);
+                drawRect(x + 3, y, 6, 8, c.rBelly);
+
+                // Tail
+                drawRect(x - 3, y + 2, 3, 4, c.rSkin);
+                drawRect(x - 5, y + 3, 2, 2, c.rSkin);
+
+                // Legs
+                drawRect(x + 1, y + 10, 4, 6, c.rSkin);
+                drawRect(x + 7, y + 10, 4, 6, c.rSkin);
+
+                // Arms (Tiny)
+                if (s === 'wave') {
+                    drawRect(x + 9, y - 1, 3, 2, c.rSkin);
+                } else {
+                    drawRect(x + 9, y + 1, 3, 2, c.rSkin);
+                }
+
+                if (s === 'freeze') {
+                    drawRect(x + 4, y - 8, 2, 2, '#FFF'); drawPixel(x + 5, y - 8, '#000');
+                } else {
+                    drawPixel(x + 5, y - 8, c.outline);
+                }
+            }
+
+            // Draw Hamm
+            function drawHamm(x, y, s) {
+                // Body (oval)
+                drawRect(x + 1, y + 4, 14, 10, c.hSkin);
+                // Ears
+                drawPixel(x + 2, y + 3, c.hSkin); drawPixel(x + 13, y + 3, c.hSkin);
+                // Snout
+                drawRect(x + 7, y + 8, 2, 4, c.hSnout); // Vertical snout for fun
+
+                // Legs
+                drawRect(x + 2, y + 14, 3, 4, c.hSkin);
+                drawRect(x + 11, y + 14, 3, 4, c.hSkin);
+            }
+
+            // Draw Jessie
+            function drawJessie(x, y, s) {
+                // Hat
+                drawRect(x - 1, y - 8, 14, 2, c.jHat);
+                drawRect(x + 1, y - 12, 10, 4, c.jHat);
+
+                // Hair (Braid Loop)
+                drawPixel(x + 1, y, c.jHair); drawPixel(x, y + 1, c.jHair); drawPixel(x, y + 2, c.jHair); // Left
+                drawPixel(x + 14, y, c.jHair); drawPixel(x + 15, y + 1, c.jHair); drawPixel(x + 15, y + 2, c.jHair); // Right
+
+                // Face
+                drawRect(x + 4, y - 6, 8, 7, c.jSkin);
+
+                // Shirt (White with Cow Print)
+                drawRect(x + 1, y + 1, 10, 9, c.jShirt);
+                if (frame % 3 === 0) { drawPixel(x + 4, y + 3, c.outline); drawPixel(x + 9, y + 5, c.outline); }
+
+                // Jeans/Chaps
+                drawRect(x + 2, y + 10, 3, 6, c.jJeans);
+                drawRect(x + 2, y + 10, 3, 4, c.jChaps); drawRect(x + 3, y + 14, 1, 1, c.jChaps); // Cow pattern
+
+                drawRect(x + 7, y + 10, 3, 6, c.jJeans);
+                drawRect(x + 7, y + 10, 3, 4, c.jChaps); drawRect(x + 8, y + 14, 1, 1, c.jChaps);
+
+                // Arms
+                if (s === 'wave') {
+                    // Right arm wave
+                    const off = Math.sin(frame * 0.3) * 2;
+                    drawRect(x + 11, y + 2 - off, 2, 6, c.jShirt);
+                    drawRect(x + 11, y - off, 3, 3, c.jSkin); // Hand
+                    // Left down
+                    drawRect(x - 1, y + 2, 2, 6, c.jShirt);
+                } else if (s === 'freeze') {
+                    drawRect(x - 1, y + 1, 2, 6, c.jShirt);
+                    drawRect(x + 11, y + 1, 2, 6, c.jShirt);
+                } else {
+                    drawRect(x - 1, y + 2, 2, 6, c.jShirt);
+                    drawRect(x + 11, y + 2, 2, 6, c.jShirt);
+                }
+
+                // Faces
+                if (s === 'sad') {
+                    drawPixel(x + 4, y - 3, c.outline); drawPixel(x + 7, y - 3, c.outline); // Eyes
+                    drawPixel(x + 5, y - 1, c.outline); drawPixel(x + 6, y - 1, c.outline); // Frown
+                    if (frame % 20 < 10) drawPixel(x + 4, y - 2, '#00F');
+                } else if (s === 'freeze') {
+                    drawRect(x + 4, y - 4, 2, 2, '#FFF'); drawPixel(x + 5, y - 4, '#000');
+                    drawRect(x + 7, y - 4, 2, 2, '#FFF'); drawPixel(x + 7, y - 4, '#000');
+                    drawRect(x + 5, y - 1, 2, 2, c.outline);
+                } else {
+                    drawPixel(x + 4, y - 3, c.outline); drawPixel(x + 7, y - 3, c.outline);
+                    drawPixel(x + 5, y, c.outline); drawPixel(x + 6, y, c.outline);
+                }
+            }
+
+            function drawScene() {
+                wCtx.clearRect(0, 0, wCanvas.width, wCanvas.height);
+                const t = frame * 0.1;
+
+                // Floor
+                wCtx.fillStyle = '#D2B48C';
+                wCtx.fillRect(10, 95, 180, 4);
+
+                if (state === 'idle') {
+                    // Bouncing
+                    const b1 = Math.abs(Math.sin(t)) * 4;
+                    const b2 = Math.abs(Math.cos(t)) * 4;
+                    const b3 = Math.abs(Math.sin(t + 1)) * 3;
+
+                    drawWoody(25, 75 - b1, 'idle');
+                    drawBuzz(50, 75 - b2, 'idle');
+                    drawRex(75, 75 - b3, 'idle');
+                    drawHamm(100, 75 - b2, 'idle');
+                    drawAlien(125, 75 - b1, 'idle');
+                    drawJessie(150, 75 - b3, 'idle');
+
+                    // Sparkles
+                    if (frame % 40 < 20) {
+                        drawRect(40, 60 - b1, 2, 2, '#FF69B4');
+                        drawRect(140, 60 - b3, 2, 2, '#8A2BE2');
+                    }
+
+                } else if (state === 'looking') {
+                    // Frozen
+                    drawWoody(25, 75, 'freeze');
+                    drawBuzz(50, 75, 'freeze');
+                    drawRex(75, 75, 'freeze');
+                    drawHamm(100, 75, 'idle');
+                    drawAlien(125, 75, 'freeze');
+                    drawJessie(150, 75, 'freeze');
+
+                    // ?! Marks
+                    if (frame % 30 < 15) {
+                        drawRect(40, 55, 2, 6, '#000'); drawRect(40, 63, 2, 2, '#000'); // !
+                        drawRect(75, 55, 2, 6, '#000'); drawRect(75, 63, 2, 2, '#000'); // !
+                        drawRect(150, 53, 2, 4, '#000'); // ?
+                    }
+
+                } else if (state === 'sad') {
+                    // Waving
+                    drawWoody(25, 75, 'wave');
+                    drawBuzz(50, 75, 'wave');
+                    drawRex(75, 75, 'wave');
+                    drawHamm(100, 75, 'idle');
+                    drawAlien(125, 75, 'idle');
+                    drawJessie(150, 75, 'wave');
+
+                    // BIG COMIC BUBBLE "BYE..."
+                    const bx = 110, by = 20;
+                    drawRect(bx, by, 80, 40, '#FFF'); // Bubble
+                    drawRect(bx - 2, by, 2, 40, '#000'); // Left border
+                    drawRect(bx + 80, by, 2, 40, '#000'); // Right
+                    drawRect(bx, by - 2, 80, 2, '#000'); // Top
+                    drawRect(bx, by + 40, 80, 2, '#000'); // Bottom
+
+                    // Tail
+                    drawRect(bx + 10, by + 42, 4, 4, '#FFF');
+                    drawRect(bx + 8, by + 42, 2, 4, '#000');
+                    drawRect(bx + 14, by + 42, 2, 4, '#000');
+                    drawRect(bx + 10, by + 46, 4, 2, '#000');
+
+                    // Text "BYE!" (Pixel art text)
+                    wCtx.fillStyle = '#000';
+                    // B
+                    drawRect(bx + 10, by + 12, 4, 16, '#000');
+                    drawRect(bx + 14, by + 12, 6, 2, '#000'); drawRect(bx + 14, by + 19, 6, 2, '#000'); drawRect(bx + 14, by + 26, 6, 2, '#000');
+                    drawRect(bx + 20, by + 14, 2, 5, '#000'); drawRect(bx + 20, by + 21, 2, 5, '#000');
+
+                    // Y
+                    drawRect(bx + 28, by + 12, 3, 6, '#000'); drawRect(bx + 34, by + 12, 3, 6, '#000');
+                    drawRect(bx + 31, by + 18, 3, 10, '#000');
+
+                    // E
+                    drawRect(bx + 42, by + 12, 3, 16, '#000');
+                    drawRect(bx + 45, by + 12, 6, 2, '#000');
+                    drawRect(bx + 45, by + 19, 5, 2, '#000');
+                    drawRect(bx + 45, by + 26, 6, 2, '#000');
+
+                    // !
+                    drawRect(bx + 56, by + 12, 3, 12, '#000');
+                    drawRect(bx + 56, by + 26, 3, 2, '#000');
+                }
+            }
+
+            function animate() {
+                frame++;
+                drawScene();
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        })();
+    </script>
+</body>
+
+</html>
