@@ -1,74 +1,28 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>The Anti-Hype Dispatch</title>
+  <link rel="stylesheet" href="../style.css">
   <style>
-    /* 🎨 COLOR PALETTE CONTROL CENTER */
-    :root {
-      /* OPTION 1: THE HIGHLIGHTER (Raw, Tech, High-Energy) - CURRENT ACTIVE */
-     /* --bg-page: #f0f0f0;
-      --bg-card: #ffffff;
-      --ink: #000000;
-      --accent-main: #ccff00;  /* Acid Lime/Yellow */
-     /* --accent-secondary: #ff00ff; /* Hot Magenta */
-     /* --accent-tertiary: #00ffff;  /* Cyan */
-      
-      /* OPTION 2: THE NEWSPAPER (Serious, Orange, Clean)
-      --bg-page: #e6e6e6;
-      --bg-card: #fdfbf7;
-      --ink: #1a1a1a;
-      --accent-main: #ff4d00;  (International Orange)
-      --accent-secondary: #fff;
-      --accent-tertiary: #dcdcdc;
-      */
-
-      /* OPTION 3: THE SOFT POP (Friendly, Pastel, Chill) */
-      --bg-page: #f2f0e9;
-      --bg-card: #fff;
-      --ink: #111;
-      --accent-main: #ffc2c9; 
-      --accent-secondary: #fff3cd;
-      --accent-tertiary: #c2e2ff; 
-     
-
-      /* SHARED STYLES */
-      --border: 3px solid var(--ink);
-      --shadow: 8px 8px 0px var(--ink); /* Deep, heavy shadow */
-      --radius: 12px;
-      
-      /* FONTS */
-      --font-serif: 'Georgia', serif;
-      --font-mono: 'Courier New', Courier, monospace;
-      --font-sans: 'Inter', system-ui, sans-serif;
-    }
-
+    /* 🎨 PAGE SPECIFIC STYLES */
+    /* Signup specific overrides */
     body {
-      margin: 0;
-      background-color: var(--bg-page);
-      /* Dot grid pattern */
-      background-image: radial-gradient(var(--ink) 1px, transparent 1px);
-      background-size: 20px 20px;
-      font-family: var(--font-sans);
-      color: var(--ink);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       padding: 20px;
+      padding-bottom: 100px;
+      /* Space for mascot on mobile */
     }
 
-    .card {
-      width: 100%;
-      max-width: 580px;
-      background: var(--bg-card);
-      border: var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
+    /* SPECIFIC VARIABLES (Soft Pop Theme) */
+    :root {
+      --accent-main: var(--accent);
+      --accent-secondary: var(--accent-soft);
+      --accent-tertiary: var(--accent-cool);
     }
+
+    /* .card styling moved to accompany wrapper below */
 
     /* HEADER */
     .header {
@@ -97,11 +51,13 @@
       padding: 5px 10px;
       border: 2px solid var(--ink);
       transform: rotate(-3deg) translateY(-10px);
-      box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
     }
 
     /* CONTENT */
-    .content { padding: 30px; }
+    .content {
+      padding: 30px;
+    }
 
     .intro {
       font-size: 1.15rem;
@@ -116,8 +72,12 @@
       gap: 15px;
       margin-top: 25px;
     }
-    
-    @media (max-width: 500px) { .bento { grid-template-columns: 1fr; } }
+
+    @media (max-width: 500px) {
+      .bento {
+        grid-template-columns: 1fr;
+      }
+    }
 
     .bento-box {
       border: var(--border);
@@ -126,9 +86,10 @@
       background: #fff;
       transition: transform 0.1s;
     }
+
     .bento-box:hover {
       transform: translate(-2px, -2px);
-      box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
     }
 
     .bento-label {
@@ -143,8 +104,15 @@
       margin-bottom: 8px;
     }
 
-    ul { margin: 0; padding-left: 20px; }
-    li { margin-bottom: 5px; font-size: 0.95rem; }
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 5px;
+      font-size: 0.95rem;
+    }
 
     /* FORM SECTION */
     .action-zone {
@@ -153,11 +121,11 @@
       padding: 30px;
       text-align: center;
     }
-    
+
     /* Used for the "Highlighter" theme to keep the form distinct */
     .action-zone.highlighter-mode {
-       background: #111;
-       color: #fff;
+      background: #111;
+      color: #fff;
     }
 
     input {
@@ -171,7 +139,10 @@
       box-sizing: border-box;
       margin-bottom: 12px;
     }
-    input:focus { background: var(--accent-main); }
+
+    input:focus {
+      background: var(--accent-main);
+    }
 
     button {
       width: 100%;
@@ -185,14 +156,15 @@
       font-size: 1.1rem;
       text-transform: uppercase;
       cursor: pointer;
-      box-shadow: 5px 5px 0 rgba(0,0,0,1);
+      box-shadow: 5px 5px 0 rgba(0, 0, 0, 1);
       transition: all 0.1s;
     }
+
     button:hover {
       transform: translate(2px, 2px);
-      box-shadow: 3px 3px 0 rgba(0,0,0,1);
+      box-shadow: 3px 3px 0 rgba(0, 0, 0, 1);
     }
-    
+
     .footer {
       text-align: center;
       font-size: 0.75rem;
@@ -200,148 +172,638 @@
       padding: 15px;
       opacity: 0.6;
     }
+
+    /* FLASH ANIMATION */
+    @keyframes flash {
+      0% {
+        background-color: var(--accent-secondary);
+      }
+
+      50% {
+        background-color: var(--accent-main);
+      }
+
+      /* PINK FLASH */
+      100% {
+        background-color: var(--accent-secondary);
+      }
+    }
+
+    .flash-success {
+      animation: flash 0.3s ease-in-out;
+    }
+
+    /* SPINNER */
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .spin {
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
+
+    /* SIGNUP MASCOT */
+    #signup-mascot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 220px;
+      height: 220px;
+      z-index: 100;
+      image-rendering: pixelated;
+      pointer-events: none;
+    }
+
+    /* MOBILE LAYOUT ADJUSTMENTS */
+    @media (max-width: 850px) {
+      #signup-mascot {
+        position: relative;
+        display: block;
+        width: 150px;
+        height: 150px;
+        bottom: auto;
+        right: auto;
+        margin: 0 auto -60px auto;
+        /* Center and overlap bottom slightly */
+        z-index: 10;
+      }
+
+      .card-wrapper {
+        display: flex;
+        flex-direction: column-reverse;
+        /* Put mascot below card */
+        align-items: center;
+        margin-bottom: 60px;
+        /* Space for mascot */
+      }
+    }
+
+    .card-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 580px;
+      /* Margin removed */
+    }
+
+    .card {
+      width: 100%;
+      /* max-width moved to wrapper */
+      background: var(--bg-card);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
   </style>
 </head>
+
 <body>
+  <canvas id="dot-canvas"></canvas>
 
-  <div class="card">
-    <div class="header">
-      <div class="sticker">Hypeless since 2026</div>
-      <h1>The AI<br>Dispatch.</h1>
-    </div>
+  <div class="card-wrapper">
+    <canvas id="signup-mascot"></canvas>
+    <div class="card">
+      <div class="header">
+        <div class="sticker">Hypeless since 2026</div>
+        <h1>The AI<br>Dispatch.</h1>
+      </div>
 
-    <div class="content">
-      <p class="intro">
-        <strong>Your timeline is a dumpster fire.</strong><br>
-        Everyone is a guru. Everything is "game-changing." It's exhausting.
-      </p>
-      
-      <p style="font-style: italic; background: var(--accent-main); display: inline; padding: 0 4px; border-radius: 4px;">
-        We are the mute button for the noise.
-      </p>
+      <div class="content">
+        <p class="intro">
+          <strong>Your timeline is a dumpster fire.</strong><br>
+          Everyone is a guru. Everything is "game-changing." It's exhausting.
+        </p>
 
-      <div class="bento">
-        <div class="bento-box" style="background: var(--accent-tertiary);">
-          <div class="bento-label">Frequency</div>
-          <div style="font-weight: 800; font-size: 1.1rem;">
-            3x / Week.<br>
-            5 min read.<br>
-            Zero yapping.
+        <p
+          style="font-style: italic; background: var(--accent-main); display: inline; padding: 0 4px; border-radius: 4px;">
+          We are the mute button for the noise.
+        </p>
+
+        <div class="bento">
+          <div class="bento-box" style="background: var(--accent-tertiary);">
+            <div class="bento-label">Frequency</div>
+            <div style="font-weight: 800; font-size: 1.1rem;">
+              3x / Week.<br>
+              5 min read.<br>
+              Zero yapping.
+            </div>
+          </div>
+
+          <div class="bento-box">
+            <div class="bento-label">The Goods</div>
+            <ul>
+              <li>Signal-only stories</li>
+              <li>The gist, not the scrolls</li>
+              <li>One takeaway that matters</li>
+            </ul>
           </div>
         </div>
+      </div>
 
-        <div class="bento-box">
-          <div class="bento-label">The Goods</div>
-          <ul>
-            <li>Signal-only stories</li>
-            <li>The gist, not the scrolls</li>
-            <li>One takeaway that matters</li>
-          </ul>
+      <div class="action-zone highlighter-mode">
+        <div id="form-title"
+          style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; margin-bottom: 15px;">
+          Get the download.
+        </div>
+
+        <form id="form">
+          <input id="email" type="email" placeholder="YOUR@COORDINATES.COM" required />
+          <button id="btn" type="submit">Unlock Signal →</button>
+        </form>
+
+        <div id="msg" style="margin-top:15px; font-family:var(--font-mono); font-size:0.9rem;"></div>
+
+        <div style="margin-top:15px; font-size: 0.8rem; font-family: var(--font-mono); opacity: 0.7;">
+          Unsubscribe anytime. No drama.
         </div>
       </div>
-    </div>
 
-    <div class="action-zone highlighter-mode">
-      <div style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; margin-bottom: 15px;">
-        Get the download.
-      </div>
-
-      <form id="form">
-        <input id="email" type="email" placeholder="YOUR@COORDINATES.COM" required />
-        <button id="btn" type="submit">Unlock Signal →</button>
-      </form>
-      
-      <div id="msg" style="margin-top:15px; font-family:var(--font-mono); font-size:0.9rem;"></div>
-      
-      <div style="margin-top:15px; font-size: 0.8rem; font-family: var(--font-mono); opacity: 0.7;">
-        Unsubscribe anytime. No drama.
+      <div class="footer">
+        Built quietly. Sent thoughtfully.
       </div>
     </div>
 
-    <div class="footer">
-      Built quietly. Sent thoughtfully.
-    </div>
-  </div>
+    <script>
+      const form = document.getElementById("form");
+      const emailEl = document.getElementById("email");
+      const msgEl = document.getElementById("msg");
+      const btn = document.getElementById("btn");
 
-<script>
-  const form = document.getElementById("form");
-  const emailEl = document.getElementById("email");
-  const msgEl = document.getElementById("msg");
-  const btn = document.getElementById("btn");
+      let msgTimeout = null;
 
-  const setMsg = (text, color) => {
-    msgEl.style.color = color || "#fff";
-    msgEl.textContent = text;
-  };
+      const setMsg = (text, color, autoClear = true) => {
+        msgEl.style.color = color || "#fff";
+        msgEl.textContent = text;
 
-  // ✨ frontend owns the vibe
-  const COPY = {
-    subscribed: ">> you're in. welcome to the ai dispatch ✨",
-    already_subscribed: ">> bestie… you're already on the list 😌",
-    invalid_email: ">> that email looks a lil fake. try again? 👀",
-    rate_limited: ">> chill 😭 too many tries. come back in a bit.",
-    error: ">> we fumbled. retry?",
-    default: ">> something weird happened. try again in a sec?",
-    network: ">> network said no. try again?",
-  };
+        // Clear any existing timeout
+        if (msgTimeout) {
+          clearTimeout(msgTimeout);
+        }
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+        // Auto-clear message after 5 seconds (if enabled)
+        if (autoClear && text) {
+          msgTimeout = setTimeout(() => {
+            msgEl.textContent = "";
+          }, 5000);
+        }
+      };
 
-    const email = emailEl.value.trim();
-    if (!email) return;
+      /* --- TEXT LABEL LOGIC --- */
+      const COPY = {
+        subscribed: ">> you're in. welcome to the ai dispatch ✨",
+        already_subscribed: ">> bestie… you're already on the list 😌",
+        invalid_email: ">> that email looks a lil fake. try again? 👀",
+        rate_limited: ">> chill 😭 too many tries. come back in a bit.",
+        error: ">> we fumbled. retry?",
+        default: ">> something weird happened. try again in a sec?",
+        network: ">> network said no. try again?",
+      };
 
-    btn.disabled = true;
-    btn.innerText = "⏳ PROCESSING...";
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    try {
-      // 🔒 Calls secure server-side proxy (webhook URL stays hidden)
-      const res = await fetch('/api/subscribe', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        const email = emailEl.value.trim();
+        if (!email) return;
+
+        btn.disabled = true;
+        // 1. CONNECTING STATE
+        btn.innerHTML = '<span class="spin">⏳</span> CONNECTING...';
+
+        try {
+          // 🔒 Calls secure server-side proxy
+          const res = await fetch('/api/subscribe', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+
+          let data = null;
+          try {
+            data = await res.json();
+          } catch {
+            data = null;
+          }
+
+          if (!data || typeof data !== "object") {
+            setMsg(COPY.default, "#ff00ff");
+            btn.innerText = "UNLOCK SIGNAL →";
+            btn.disabled = false;
+            return;
+          }
+
+          const ok = data.ok === true;
+          const status = (data.status || (ok ? "subscribed" : "error")).toString();
+
+          if (ok) {
+            // 2. SUCCESS FLASH
+            const actionZone = document.querySelector('.action-zone');
+            actionZone.classList.add('flash-success');
+            setTimeout(() => actionZone.classList.remove('flash-success'), 300);
+
+            setMsg(COPY.subscribed, "#ccff00", false); // Manual clear
+            form.reset();
+
+            // 3. SIGNAL ACQUIRED
+            if (window.triggerMascotVictory) window.triggerMascotVictory(); // TRIGGER MASCOT CLAP
+            document.getElementById('form-title').innerText = "WELCOME TO REALITY.";
+            btn.innerText = "SIGNAL ACQUIRED ✓";
+            btn.style.backgroundColor = "#ccff00"; // Green/Lime for success
+            btn.style.color = "#111";
+            btn.disabled = true;
+
+            // Reset button after 3 seconds
+            setTimeout(() => {
+              btn.innerText = "UNLOCK SIGNAL →";
+              btn.style.backgroundColor = ""; // Reset to default
+              btn.style.color = "";
+              btn.disabled = false;
+              setMsg("", ""); // Clear text IN SYNC
+              document.getElementById('form-title').innerText = "Get the download.";
+            }, 4000);
+
+            return;
+          }
+
+          // Error handling
+          const msg = COPY[status] || COPY.error;
+          setMsg(msg, "#ff00ff");
+          btn.innerText = "UNLOCK SIGNAL →";
+          btn.disabled = false;
+
+        } catch (err) {
+          setMsg(COPY.network, "#ff00ff");
+          btn.innerText = "UNLOCK SIGNAL →";
+          btn.disabled = false;
+        }
       });
 
-      // If n8n returns nothing / non-JSON, treat as "default"
-      let data = null;
-      try {
-        data = await res.json();
-      } catch {
-        data = null;
+      /* 
+         ✨ REACT BITS DOT GRID - OPTIMIZED VANILLA PORT
+         Scaled for Retina displays & smoother physics
+      */
+      const canvas = document.getElementById('dot-canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Config - Tuned for smoothness
+      const CONFIG = {
+        dotSize: 2,           // Smaller dots for cleaner look
+        gap: 32,              // Spacing
+        baseColor: '#b0b0b0', // Subtle gray (matches dot grid vibe)
+        activeColor: '#ccff00', // Acid Lime highlight
+        proximity: 200,       // Increased range
+        maxSpeed: 20,        // Clamped speed to prevent jitter
+        friction: 0.92,       // Smoother decay
+        spring: 0.05,          // Softer snap-back
+        shockRadius: 300,     // Click explosion radius
+        shockStrength: 15     // Click power
+      };
+
+      let width, height, dpr;
+      let dots = [];
+
+      // Improved Mouse State with Smoothing
+      const mouse = {
+        x: -1000,
+        y: -1000,
+        lastX: -1000,
+        lastY: -1000,
+        vx: 0,
+        vy: 0
+      };
+
+      function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : { r: 0, g: 0, b: 0 };
       }
 
-      // Nothing usable returned (empty body / non-JSON / crash)
-      if (!data || typeof data !== "object") {
-        setMsg(COPY.default, "#ff00ff");
-        btn.innerText = "UNLOCK SIGNAL →";
-        btn.disabled = false;
-        return;
+      const baseRgb = hexToRgb(CONFIG.baseColor);
+      const activeRgb = hexToRgb(CONFIG.activeColor);
+
+      class Dot {
+        constructor(x, y) {
+          this.baseX = x;
+          this.baseY = y;
+          this.x = x;
+          this.y = y;
+          this.vx = 0;
+          this.vy = 0;
+        }
+
+        update() {
+          // Physics: Spring to base
+          const dx = this.baseX - this.x;
+          const dy = this.baseY - this.y;
+
+          this.vx += dx * CONFIG.spring;
+          this.vy += dy * CONFIG.spring;
+
+          // Physics: Friction
+          this.vx *= CONFIG.friction;
+          this.vy *= CONFIG.friction;
+
+          // Interaction: Mouse Proximity
+          const dxMouse = this.x - mouse.x;
+          const dyMouse = this.y - mouse.y;
+          const dist = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+          if (dist < CONFIG.proximity) {
+            // Calculate force based on mouse velocity (inertia)
+            const force = (1 - dist / CONFIG.proximity) * 2;
+
+            if (Math.abs(mouse.vx) > 2 || Math.abs(mouse.vy) > 2) {
+              this.vx += mouse.vx * force * 0.1;
+              this.vy += mouse.vy * force * 0.1;
+            }
+          }
+
+          // Apply velocity
+          this.x += this.vx;
+          this.y += this.vy;
+        }
+
+        draw() {
+          // Color blending based on displacement
+          const disp = Math.sqrt((this.x - this.baseX) ** 2 + (this.y - this.baseY) ** 2);
+          const ratio = Math.min(disp / 50, 1);
+
+          const r = Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * ratio);
+          const g = Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * ratio);
+          const b = Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * ratio);
+
+          ctx.fillStyle = `rgb(${r},${g},${b})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, CONFIG.dotSize, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        explode(cx, cy) {
+          const dx = this.x - cx;
+          const dy = this.y - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < CONFIG.shockRadius) {
+            const force = (1 - dist / CONFIG.shockRadius) * CONFIG.shockStrength;
+            const angle = Math.atan2(dy, dx);
+            this.vx += Math.cos(angle) * force;
+            this.vy += Math.sin(angle) * force;
+          }
+        }
       }
 
-      const ok = data.ok === true;
-      const status = (data.status || (ok ? "subscribed" : "error")).toString();
+      function init() {
+        // Retina / High DPI support
+        dpr = window.devicePixelRatio || 1;
+        const rect = document.body.getBoundingClientRect();
 
-      if (ok) {
-        setMsg(COPY.subscribed, "#ccff00");
-        form.reset();
-        btn.innerText = "DONE";
-        btn.disabled = true;
-        return;
+        width = rect.width;
+        height = window.innerHeight;
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+
+        canvas.style.width = `100%`;
+        canvas.style.height = `100%`;
+
+        ctx.scale(dpr, dpr);
+
+        dots = [];
+        const cols = Math.floor(width / CONFIG.gap);
+        const rows = Math.floor(height / CONFIG.gap);
+
+        // Center the grid
+        const startX = (width - cols * CONFIG.gap) / 2;
+        const startY = (height - rows * CONFIG.gap) / 2;
+
+        for (let i = 0; i <= cols; i++) {
+          for (let j = 0; j <= rows; j++) {
+            dots.push(new Dot(
+              startX + i * CONFIG.gap,
+              startY + j * CONFIG.gap
+            ));
+          }
+        }
       }
 
-      // Known statuses → vibe copy; unknown → backend error vibe
-      const msg = COPY[status] || COPY.error;
-      setMsg(msg, "#ff00ff");
-      btn.innerText = "UNLOCK SIGNAL →";
-      btn.disabled = false;
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        dots.forEach(dot => {
+          dot.update();
+          dot.draw();
+        });
+        requestAnimationFrame(animate);
+      }
 
-    } catch (err) {
-      // Network / fetch failed entirely
-      setMsg(COPY.network, "#ff00ff");
-      btn.innerText = "UNLOCK SIGNAL →";
-      btn.disabled = false;
-    }
-  });
-</script>
+      // Smoother Velocity Tracking
+      let mouseTimeout;
+      window.addEventListener('mousemove', e => {
+        clearTimeout(mouseTimeout);
+
+        const vx = (e.clientX - mouse.x);
+        const vy = (e.clientY - mouse.y);
+
+        // Clamp max velocity
+        mouse.vx = Math.max(Math.min(vx, CONFIG.maxSpeed), -CONFIG.maxSpeed);
+        mouse.vy = Math.max(Math.min(vy, CONFIG.maxSpeed), -CONFIG.maxSpeed);
+
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+
+        // Reset velocity when stopped
+        mouseTimeout = setTimeout(() => {
+          mouse.vx = 0;
+          mouse.vy = 0;
+        }, 50);
+      });
+
+      window.addEventListener('click', e => {
+        dots.forEach(dot => dot.explode(e.clientX, e.clientY));
+      });
+
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(init, 100);
+      });
+
+      init();
+      animate();
+      init();
+      animate();
+
+      /* 
+        📺 TV HEAD MASCOT
+        States: STATIC (Idle) -> REC (Typing) -> PARTY (Victory)
+      */
+      (function () {
+        const canvas = document.getElementById('signup-mascot');
+        const ctx = canvas.getContext('2d');
+        const emailInput = document.getElementById('email');
+        const scale = 5;
+
+        let state = 'STATIC';
+        let frame = 0;
+        let bobY = 0;
+        let walkX = 0;
+        let currentText = "NO SIGNAL";
+
+        // Flavor Text Options
+        const idleTexts = ["NO SIGNAL", "SCANNING...", "FEED: NULL", "WAITING", "HZ: 00.0"];
+
+        // Cycle idle text every 3 seconds
+        setInterval(() => {
+          if (state === 'STATIC') {
+            currentText = idleTexts[Math.floor(Math.random() * idleTexts.length)];
+          }
+        }, 3000);
+
+        emailInput.addEventListener('focus', () => {
+          if (state !== 'PARTY') { state = 'REC'; currentText = "RECEIVING..."; }
+        });
+        emailInput.addEventListener('blur', () => {
+          if (state !== 'PARTY') { state = 'STATIC'; currentText = "NO SIGNAL"; }
+        });
+        emailInput.addEventListener('input', () => {
+          if (state !== 'PARTY') { state = 'REC'; currentText = "DECODING..."; }
+        });
+
+        window.triggerMascotVictory = () => {
+          state = 'PARTY';
+          currentText = "SIGNAL FOUND!";
+          setTimeout(() => {
+            state = 'STATIC';
+            currentText = "NO SIGNAL";
+          }, 4000);
+        };
+
+        function resize() {
+          // Increased canvas height for text space
+          canvas.width = 36 * scale;
+          canvas.height = 36 * scale;
+          ctx.imageSmoothingEnabled = false;
+          ctx.scale(scale, scale);
+
+          // Font setup
+          ctx.font = '4px monospace';
+          ctx.textAlign = 'center';
+        }
+        resize();
+
+        function drawPixel(x, y, color) {
+          ctx.fillStyle = color;
+          ctx.fillRect(Math.floor(x), Math.floor(y), 1, 1);
+        }
+
+        function drawTV() {
+          ctx.clearRect(0, 0, 36, 36);
+          frame++;
+
+          // Bobbing & Walking
+          if (state === 'STATIC' || state === 'REC') {
+            bobY = Math.sin(frame * 0.1) * 1;
+            walkX = 0;
+          } else if (state === 'PARTY') {
+            bobY = Math.abs(Math.sin(frame * 0.4)) * 2;
+            walkX = Math.sin(frame * 0.2) * 2;
+          }
+
+          // Centered in new canvas size
+          const mx = 8 + walkX;
+          const my = 12 + bobY;
+
+          // --- TEXT LABEL ---
+          // Draw a little bubble or just text
+          ctx.fillStyle = '#111';
+          ctx.fillText(currentText, 18, my - 6);
+
+          // --- LEGS ---
+          drawPixel(mx + 8, my + 14, '#111');
+          drawPixel(mx + 8, my + 15, '#111');
+          drawPixel(mx + 18, my + 14, '#111');
+          drawPixel(mx + 18, my + 15, '#111');
+
+          if (state === 'PARTY' && frame % 10 < 5) drawPixel(mx + 19, my + 15, '#111');
+
+          // --- TV BODY (Casing) ---
+          ctx.fillStyle = '#111';
+          ctx.fillRect(mx + 2, my + 2, 24, 14);
+
+          // --- SCREEN ---
+          ctx.fillStyle = '#222';
+          ctx.fillRect(mx + 4, my + 4, 16, 10);
+
+          // --- KNOBS PANEL ---
+          ctx.fillStyle = '#333';
+          ctx.fillRect(mx + 21, my + 4, 4, 10);
+
+          // Knobs
+          drawPixel(mx + 22, my + 5, '#ccff00');
+          drawPixel(mx + 22, my + 8, '#ffc2c9');
+
+          // --- ANTENNAS ---
+          drawPixel(mx + 6, my + 1, '#111');
+          drawPixel(mx + 5, my + 0, '#111');
+          drawPixel(mx + 4, my - 1, '#ff00ff');
+          drawPixel(mx + 20, my + 1, '#111');
+          drawPixel(mx + 21, my + 0, '#111');
+          drawPixel(mx + 22, my - 1, '#ffc2c9');
+
+          if (state === 'STATIC' && frame % 60 < 10) {
+            drawPixel(mx + 4, my - 1, 'rgba(0,0,0,0)');
+            drawPixel(mx + 3, my - 2, '#ff00ff');
+          }
+
+          // --- SCREEN CONTENT ---
+          if (state === 'STATIC') {
+            for (let i = 0; i < 16; i++) {
+              for (let j = 0; j < 10; j++) {
+                const r = Math.random();
+                if (r > 0.8) drawPixel(mx + 4 + i, my + 4 + j, '#444');
+                if (r > 0.92) drawPixel(mx + 4 + i, my + 4 + j, '#fff');
+                if (r > 0.96) drawPixel(mx + 4 + i, my + 4 + j, '#ff00ff');
+              }
+            }
+          }
+          else if (state === 'REC') {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(mx + 4, my + 4, 16, 10);
+            if (frame % 20 < 10) {
+              drawPixel(mx + 5, my + 5, '#ff00ff');
+              drawPixel(mx + 6, my + 5, '#ff00ff');
+              drawPixel(mx + 5, my + 6, '#ff00ff');
+              drawPixel(mx + 6, my + 6, '#ff00ff');
+            }
+            ctx.fillStyle = '#ccff00';
+            ctx.fillRect(mx + 9, my + 8, 8, 1);
+            ctx.fillRect(mx + 9, my + 10, 6, 1);
+          }
+          else if (state === 'PARTY') {
+            ctx.fillStyle = '#000'; ctx.fillRect(mx + 4, my + 4, 16, 10);
+            drawPixel(mx + 7, my + 7, '#ccff00');
+            drawPixel(mx + 13, my + 7, '#ccff00');
+            drawPixel(mx + 6, my + 10, '#ccff00');
+            drawPixel(mx + 15, my + 10, '#ccff00');
+            drawPixel(mx + 7, my + 11, '#ccff00');
+            drawPixel(mx + 14, my + 11, '#ccff00');
+            ctx.fillRect(mx + 8, my + 12, 6, 1);
+          }
+
+          requestAnimationFrame(drawTV);
+        }
+        drawTV();
+      })();
+    </script>
 </body>
+
 </html>

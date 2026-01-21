@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Anti-Hype Dispatch</title>
+    <meta name="description" content="Noise canceling headphones for your career. Signal only." />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 🎨 PAGE SPECIFIC STYLES */
+
+
+        /* MASCOT (Bottom Right - Bigger) */
+        #mascot-canvas {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            width: 200px;
+            /* BIGGER */
+            height: 200px;
+            z-index: 50;
+            image-rendering: pixelated;
+            /* CRISP PIXELS */
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        #mascot-canvas:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* VIDEO WIDGET (Top Left) */
+        .video-widget {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            background: var(--ink);
+            border: 3px solid var(--ink);
+            box-shadow: 8px 8px 0 var(--accent);
+            border-radius: 8px;
+            z-index: 50;
+            overflow: hidden;
+            transform: rotate(-2deg);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .video-widget:hover {
+            transform: rotate(0deg) scale(1.02);
+            box-shadow: 12px 12px 0 var(--accent);
+        }
+
+        .video-label {
+            background: var(--ink);
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            text-align: center;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #fff;
+        }
+
+        .video-widget video {
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: pixelated;
+            /* Keeps it retro if it's low res */
+        }
+
+        /* GLITCH TEXT EFFECT */
+        .glitch-wrapper {
+            position: relative;
+            margin-bottom: 0.5rem;
+            /* Tighter spacing */
+        }
+
+        .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: 800;
+            background: var(--accent);
+            /* MATCHING PINK */
+            color: var(--ink);
+            display: inline-block;
+            padding: 4px 8px;
+            margin-bottom: 10px;
+            transform: rotate(-1deg);
+            border: 1px solid var(--ink);
+            box-shadow: 3px 3px 0 var(--ink);
+        }
+
+        /* ... */
+
+
+
+        h1 {
+            font-family: var(--font-serif);
+            font-size: 5rem;
+            text-transform: uppercase;
+            line-height: 0.85;
+            /* Tighter line height */
+            margin: 0;
+            font-weight: 900;
+            letter-spacing: -4px;
+            position: relative;
+            z-index: 1;
+            color: var(--ink);
+        }
+
+        h1::before,
+        h1::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-page);
+        }
+
+        h1::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--accent);
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        h1::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--accent-pop);
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                clip: rect(11px, 9999px, 32px, 0);
+            }
+
+            20% {
+                clip: rect(89px, 9999px, 12px, 0);
+            }
+
+            40% {
+                clip: rect(45px, 9999px, 66px, 0);
+            }
+
+            60% {
+                clip: rect(90px, 9999px, 11px, 0);
+            }
+
+            80% {
+                clip: rect(10px, 9999px, 78px, 0);
+            }
+
+            100% {
+                clip: rect(33px, 9999px, 55px, 0);
+            }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% {
+                clip: rect(66px, 9999px, 11px, 0);
+            }
+
+            20% {
+                clip: rect(22px, 9999px, 4px, 0);
+            }
+
+            40% {
+                clip: rect(78px, 9999px, 90px, 0);
+            }
+
+            60% {
+                clip: rect(1px, 9999px, 22px, 0);
+            }
+
+            80% {
+                clip: rect(44px, 9999px, 66px, 0);
+            }
+
+            100% {
+                clip: rect(12px, 9999px, 88px, 0);
+            }
+        }
+
+        .sub {
+            font-family: var(--font-mono);
+            background: var(--ink);
+            color: #fff;
+            padding: 5px 10px;
+            margin-top: 10px;
+            /* Tighter spacing */
+            font-size: 1rem;
+            text-align: center;
+            line-height: 1.4;
+            transform: rotate(-2deg);
+        }
+
+        /* MASSIVE BUTTON */
+        .btn-container {
+            margin-top: 35px;
+            /* Tighter spacing */
+            position: relative;
+        }
+
+        #guardian-canvas {
+            position: absolute;
+            top: -45px;
+            /* Sit on top of the button */
+            left: -15px;
+            width: 180px;
+            /* Display Size */
+            height: 120px;
+            pointer-events: none;
+            /* Let clicks pass through to button */
+            z-index: 20;
+        }
+
+        .cta {
+            display: inline-block;
+            background: var(--bg-card);
+            color: var(--ink);
+            font-family: var(--font-mono);
+            font-weight: 900;
+            font-size: 1.5rem;
+            padding: 20px 40px 20px 70px;
+            /* Added Left Padding for Guardian */
+            text-decoration: none;
+            border: 3px solid var(--ink);
+            text-transform: uppercase;
+            position: relative;
+            transition: all 0.1s;
+            z-index: 10;
+            box-shadow: 8px 8px 0px var(--ink);
+        }
+
+        .cta:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 12px 12px 0px var(--ink);
+            background: var(--accent);
+        }
+
+        .cta:active {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0px var(--ink);
+        }
+
+        /* MARQUEE */
+        .marquee-container {
+            position: fixed;
+            /* Fixed to always stay at bottom */
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            /* Force full viewport width */
+            overflow: hidden;
+            white-space: nowrap;
+            border-top: 3px solid var(--ink);
+            background: var(--accent);
+            padding: 12px 0;
+            z-index: 100;
+        }
+
+        .marquee {
+            display: inline-block;
+            animation: scroll 20s linear infinite;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--ink);
+            /* Ensure it renders smoothly */
+            will-change: transform;
+        }
+
+        .marquee span {
+            padding: 0 30px;
+        }
+
+        .marquee span.highlight {
+            background: var(--ink);
+            color: #fff;
+            padding: 2px 8px;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 850px) {
+
+            body,
+            html {
+                overflow-y: auto;
+                /* Enable scrolling on mobile */
+                height: auto;
+                display: block;
+                /* Stack content naturally */
+            }
+
+            /* Center everything on mobile */
+            body {
+                padding-bottom: 150px;
+                /* More space for marquee */
+                cursor: auto;
+                text-align: center;
+                /* Center Text */
+            }
+
+            /* Center the Glitch Title Wrapper explicitly */
+            .glitch-wrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            /* Center the Button Container */
+            .btn-container {
+                margin: 35px auto 40px auto;
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+
+            /* Unpin Video Widget */
+            .video-widget {
+                position: relative;
+                top: 20px;
+                left: 0;
+                margin: 0 auto 40px auto;
+                /* Center top */
+                transform: rotate(0deg);
+                width: 90%;
+                max-width: 320px;
+                box-shadow: 6px 6px 0 var(--accent);
+            }
+
+            .video-widget:hover {
+                transform: none;
+                /* Disable hover on touch */
+            }
+
+            /* Unpin Mascot */
+            #mascot-canvas {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                margin: 40px auto 20px auto;
+                /* Center bottom */
+                display: block;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            .cta {
+                font-size: 1.2rem;
+                padding: 15px 30px;
+            }
+
+            /* Adjust Guardian */
+            .btn-container {
+                margin-bottom: 40px;
+            }
+
+            #guardian-canvas {
+                display: none;
+                /* Hide guardian on mobile to prevent overlap */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="dot-canvas"></canvas>
+    <canvas id="dot-canvas"></canvas>
+    <canvas id="dot-canvas"></canvas>
+    <!-- Mascot rendered at bottom of DOM for mobile stacking -->
+
+    <div class="video-widget">
+        <div class="video-label">SIGNAL DETECTED 🟢</div>
+        <video autoplay loop muted playsinline>
+            <source src="animation/cat-catching-signal.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="glitch-wrapper">
+        <div class="eyebrow">// THE ANTI-HYPE AI NEWSLETTER</div>
+        <h1 data-text="UNMUTE">UNMUTE</h1>
+        <h1 data-text="THE SIGNAL" style="color: var(--accent);">THE SIGNAL</h1>
+    </div>
+
+    <div class="sub">
+        Noise canceling headphones for your inbox.<br>
+        <span style="opacity:0.6; font-size: 0.8em;">[ SYSTEM STATUS: NOISY ] -> [ SIGNAL RESTORED ]</span>
+    </div>
+
+    <div class="btn-container">
+        <!-- GUARDIAN CANVAS SITS HERE -->
+        <canvas id="guardian-canvas"></canvas>
+        <a href="/signup" class="cta">ENTER_DISPATCH -></a>
+    </div>
+
+    <div class="marquee-container">
+        <div class="marquee">
+            NO GURUS 🔇 // <span class="highlight">ZERO YAPPING</span> // SIGNAL ONLY ⚡ // HYPE KILLED THE CAT 🐱💀 //
+            <span class="highlight">5 MIN READ</span>
+            // NO GURUS 🔇 // <span class="highlight">ZERO YAPPING</span> // SIGNAL ONLY ⚡ // HYPE KILLED THE CAT 🐱💀
+            // <span class="highlight">5 MIN READ</span>
+        </div>
+    </div>
+
+    <!-- CORE VISUALS (Rendered Last) -->
+    <canvas id="mascot-canvas"></canvas>
+
+    <script>
+        /* 
+           ✨ REACT BITS DOT GRID - OPTIMIZED VANILLA PORT
+           Scaled for Retina displays & smoother physics
+        */
+        const canvas = document.getElementById('dot-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Config - Tuned for smoothness
+        const CONFIG = {
+            dotSize: 2,           // Smaller dots for cleaner look
+            gap: 32,              // Spacing
+            baseColor: '#b0b0b0', // Subtle gray (matches dot grid vibe)
+            activeColor: '#ffc2c9', // Acid Lime highlight -> Pink
+            proximity: 200,       // Increased range
+            maxSpeed: 20,        // Clamped speed to prevent jitter
+            friction: 0.92,       // Smoother decay
+            spring: 0.05,          // Softer snap-back
+            shockRadius: 300,     // Click explosion radius
+            shockStrength: 15     // Click power
+        };
+
+        let width, height, dpr;
+        let dots = [];
+
+        // Improved Mouse State with Smoothing
+        const mouse = {
+            x: -1000,
+            y: -1000,
+            lastX: -1000,
+            lastY: -1000,
+            vx: 0,
+            vy: 0
+        };
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : { r: 0, g: 0, b: 0 };
+        }
+
+        const baseRgb = hexToRgb(CONFIG.baseColor);
+        const activeRgb = hexToRgb(CONFIG.activeColor);
+
+        class Dot {
+            constructor(x, y) {
+                this.baseX = x;
+                this.baseY = y;
+                this.x = x;
+                this.y = y;
+                this.vx = 0;
+                this.vy = 0;
+            }
+
+            update() {
+                // Physics: Spring to base
+                const dx = this.baseX - this.x;
+                const dy = this.baseY - this.y;
+
+                this.vx += dx * CONFIG.spring;
+                this.vy += dy * CONFIG.spring;
+
+                // Physics: Friction
+                this.vx *= CONFIG.friction;
+                this.vy *= CONFIG.friction;
+
+                // Interaction: Mouse Proximity
+                const dxMouse = this.x - mouse.x;
+                const dyMouse = this.y - mouse.y;
+                const dist = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+                if (dist < CONFIG.proximity) {
+                    // Calculate force based on mouse velocity (inertia)
+                    const force = (1 - dist / CONFIG.proximity);
+                    // Smoother velocity transfer
+                    if (Math.abs(mouse.vx) > 0.5 || Math.abs(mouse.vy) > 0.5) {
+                        this.vx += mouse.vx * force * 0.05;
+                        this.vy += mouse.vy * force * 0.05;
+                    }
+                }
+
+                // Apply velocity
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw() {
+                // Color blending based on displacement
+                const disp = Math.sqrt((this.x - this.baseX) ** 2 + (this.y - this.baseY) ** 2);
+                const ratio = Math.min(disp / 40, 1); // Max color change at 50px displacement
+
+                const r = Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * ratio);
+                const g = Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * ratio);
+                const b = Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * ratio);
+
+                ctx.fillStyle = `rgb(${r},${g},${b})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, CONFIG.dotSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            explode(cx, cy) {
+                const dx = this.x - cx;
+                const dy = this.y - cy;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < CONFIG.shockRadius) {
+                    const force = (1 - dist / CONFIG.shockRadius) * CONFIG.shockStrength;
+                    const angle = Math.atan2(dy, dx);
+                    this.vx += Math.cos(angle) * force;
+                    this.vy += Math.sin(angle) * force;
+                }
+            }
+        }
+
+        function init() {
+            // Retina / High DPI support
+            dpr = window.devicePixelRatio || 1;
+            const rect = document.body.getBoundingClientRect();
+
+            width = rect.width;
+            height = window.innerHeight; // Use innerHeight to avoid scrollbar jitter
+
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+
+            ctx.scale(dpr, dpr);
+
+            dots = [];
+            const cols = Math.floor(width / CONFIG.gap);
+            const rows = Math.floor(height / CONFIG.gap);
+
+            const startX = (width - cols * CONFIG.gap) / 2;
+            const startY = (height - rows * CONFIG.gap) / 2;
+
+            for (let i = 0; i <= cols; i++) {
+                for (let j = 0; j <= rows; j++) {
+                    dots.push(new Dot(
+                        startX + i * CONFIG.gap,
+                        startY + j * CONFIG.gap
+                    ));
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            dots.forEach(dot => {
+                dot.update();
+                dot.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        // Smoother Velocity Tracking
+        let mouseTimeout;
+        window.addEventListener('mousemove', e => {
+            clearTimeout(mouseTimeout);
+
+            const vx = (e.clientX - mouse.x);
+            const vy = (e.clientY - mouse.y);
+
+            // Clamp max velocity
+            mouse.vx = Math.max(Math.min(vx, CONFIG.maxSpeed), -CONFIG.maxSpeed);
+            mouse.vy = Math.max(Math.min(vy, CONFIG.maxSpeed), -CONFIG.maxSpeed);
+
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+
+            // Reset velocity when stopped
+            mouseTimeout = setTimeout(() => {
+                mouse.vx = 0;
+                mouse.vy = 0;
+            }, 50);
+        });
+
+        window.addEventListener('click', e => {
+            dots.forEach(dot => dot.explode(e.clientX, e.clientY));
+        });
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(init, 100);
+        });
+
+        init();
+        animate();
+
+        /* 
+          👾 GLITCH MASCOT
+          Retro interactive pixel art
+        */
+        (function () {
+            const mCanvas = document.getElementById('mascot-canvas');
+            const mCtx = mCanvas.getContext('2d');
+            const scale = 7; // SCALED UP (was 5)
+            let frame = 0;
+
+            const mascot = { x: 0, y: 0, glitch: 0 };
+
+            function resize() {
+                mCanvas.width = 100 * scale;
+                mCanvas.height = 100 * scale;
+                // Bigger Screen Size
+                mCanvas.style.width = '200px';
+                mCanvas.style.height = '200px';
+                mCtx.imageSmoothingEnabled = false;
+                mCtx.scale(scale, scale);
+            }
+            resize();
+
+            function drawPixel(x, y, color) {
+                if (mascot.glitch > 0 && Math.random() < 0.1) {
+                    x += (Math.random() - 0.5) * 5;
+                    y += (Math.random() - 0.5) * 2;
+                    if (Math.random() > 0.5) color = '#ccff00';
+                    else if (Math.random() > 0.5) color = '#ff00ff';
+                }
+                mCtx.fillStyle = color;
+                mCtx.fillRect(Math.floor(x), Math.floor(y), 1, 1);
+            }
+
+            function drawMascot() {
+                mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+                const bounce = Math.sin(frame * 0.1) * 2;
+                const mx = 20;
+                const my = 30 + bounce;
+
+                // Eye tracking
+                const rect = mCanvas.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const dx = (mouse.x - centerX) / window.innerWidth * 8;
+                const dy = (mouse.y - centerY) / window.innerHeight * 6;
+                const eyeX = Math.min(Math.max(dx, -3), 3);
+                const eyeY = Math.min(Math.max(dy, -2), 2);
+
+                // Drawing (Same logic, bigger canvas)
+                mCtx.fillStyle = '#111';
+                mCtx.fillRect(mx + 5, my - 8, 30, 4);
+                mCtx.fillRect(mx + 2, my - 5, 4, 15);
+                mCtx.fillRect(mx + 34, my - 5, 4, 15);
+                mCtx.fillRect(mx - 2, my + 8, 8, 12);
+                mCtx.fillRect(mx + 34, my + 8, 8, 12);
+
+                mCtx.fillStyle = '#fff';
+                mCtx.fillRect(mx + 6, my, 28, 20);
+                mCtx.fillStyle = '#111';
+                mCtx.strokeRect(mx + 6, my, 28, 20);
+
+                const eyeColor = mascot.glitch > 0 ? '#ffc2c9' : '#111';
+                drawPixel(mx + 12 + eyeX, my + 8 + eyeY, eyeColor);
+                drawPixel(mx + 13 + eyeX, my + 8 + eyeY, eyeColor);
+                drawPixel(mx + 12 + eyeX, my + 9 + eyeY, eyeColor);
+                drawPixel(mx + 13 + eyeX, my + 9 + eyeY, eyeColor);
+                drawPixel(mx + 22 + eyeX, my + 8 + eyeY, eyeColor);
+                drawPixel(mx + 23 + eyeX, my + 8 + eyeY, eyeColor);
+                drawPixel(mx + 22 + eyeX, my + 9 + eyeY, eyeColor);
+                drawPixel(mx + 23 + eyeX, my + 9 + eyeY, eyeColor);
+
+                if (mascot.glitch === 0) {
+                    drawPixel(mx + 18, my + 15, '#111');
+                    drawPixel(mx + 19, my + 15, '#111');
+                } else {
+                    mCtx.fillStyle = '#111';
+                    mCtx.fillRect(mx + 17, my + 14, 4, 4);
+                }
+
+                if (mascot.glitch > 0) mascot.glitch--;
+                frame++;
+                requestAnimationFrame(drawMascot);
+            }
+
+            mCanvas.addEventListener('click', () => { mascot.glitch = 60; });
+            window.addEventListener('click', (e) => {
+                const rect = mCanvas.getBoundingClientRect();
+                const dist = Math.hypot(e.clientX - (rect.left + rect.width / 2), e.clientY - (rect.top + rect.height / 2));
+                if (dist < 100) mascot.glitch = 40;
+            });
+            drawMascot();
+        })();
+
+        /* 
+          👮 BUTTON GUARDIAN
+          Sitting on the button, protecting the signal.
+        */
+        (function () {
+            const gCanvas = document.getElementById('guardian-canvas');
+            const gCtx = gCanvas.getContext('2d');
+            const btn = document.querySelector('.cta');
+            const scale = 3;
+            let isHovering = false;
+            let frame = 0;
+
+            function resize() {
+                gCanvas.width = 60 * scale;
+                gCanvas.height = 40 * scale;
+                // Position logic in CSS
+                gCtx.imageSmoothingEnabled = false;
+                gCtx.scale(scale, scale);
+            }
+            resize();
+
+            // Track Button Hover
+            btn.addEventListener('mouseenter', () => isHovering = true);
+            btn.addEventListener('mouseleave', () => isHovering = false);
+
+            function drawGuardian() {
+                gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+
+                const gx = 10;
+                const gy = isHovering ? 10 : 20; // Stand up on hover!
+
+                // Body
+                gCtx.fillStyle = '#111';
+                gCtx.fillRect(gx, gy, 12, 14);
+
+                // Legs (Dangling vs Standing)
+                if (isHovering) {
+                    // Standing legs
+                    gCtx.fillRect(gx + 2, gy + 14, 3, 6);
+                    gCtx.fillRect(gx + 7, gy + 14, 3, 6);
+
+                    // Salute Arm
+                    gCtx.fillRect(gx + 12, gy + 2, 4, 2);
+                    gCtx.fillRect(gx + 14, gy - 2, 2, 4);
+                } else {
+                    // Sitting legs (dangling over button edge)
+                    gCtx.fillRect(gx + 2, gy + 12, 3, 5);
+                    gCtx.fillRect(gx + 7, gy + 12, 3, 5);
+                }
+
+                // Head
+                gCtx.fillStyle = '#fff';
+                gCtx.fillRect(gx + 1, gy - 8, 10, 8);
+
+                // Headphones (Pink on hover!)
+                gCtx.fillStyle = isHovering ? '#ffc2c9' : '#111';
+                gCtx.fillRect(gx - 1, gy - 6, 2, 5); // L
+                gCtx.fillRect(gx + 11, gy - 6, 2, 5); // R
+                gCtx.fillRect(gx + 1, gy - 9, 10, 1); // Band
+
+                // Eyes
+                gCtx.fillStyle = '#111';
+                // Blink logic
+                if (Math.random() > 0.05 || isHovering) {
+                    gCtx.fillRect(gx + 3, gy - 5, 2, 2);
+                    gCtx.fillRect(gx + 7, gy - 5, 2, 2);
+                }
+
+                frame++;
+                requestAnimationFrame(drawGuardian);
+            }
+            drawGuardian();
+        })();
+    </script>
+</body>
+
+</html>

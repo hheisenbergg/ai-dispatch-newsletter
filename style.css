@@ -1,0 +1,63 @@
+/* 🎨 THE AI DISPATCH - GLOBAL STYLES */
+
+:root {
+  /* --- PALETTE --- */
+  --bg-page: #f2f0e9;   /* Soft Off-White */
+  --bg-card: #fff;
+  --ink: #111;          /* Almost Black */
+  
+  /* --- ACCENTS --- */
+  --accent: #ffc2c9;      /* Soft Pop Pink (Main Brand) */
+  --accent-pop: #ccff00;  /* Acid Lime (Tech Highlights) */
+  --accent-soft: #fff3cd; /* Pale Yellow (Secondary UI) */
+  --accent-cool: #c2e2ff; /* Pale Blue (Tertiary UI) */
+  
+  /* --- SHAPE & FORM --- */
+  --border: 3px solid var(--ink);
+  --shadow: 8px 8px 0px var(--ink); /* Deep Brutalist Shadow */
+  --radius: 12px;
+
+  /* --- FONTS --- */
+  --font-serif: 'Georgia', serif;
+  --font-mono: 'Courier New', Courier, monospace;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+/* --- GLOBAL RESET --- */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-page);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /* overflow-x: hidden; handled per page if needed */
+  cursor: crosshair; /* Global Vibe */
+}
+
+/* --- CANVAS BACKGROUND --- */
+#dot-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* --- UTILITIES --- */
+.hidden-mobile {
+  display: none;
+}
+
+/* --- RESPONSIVE DEFAULTS --- */
+@media (max-width: 850px) {
+  body {
+    cursor: auto; /* Fix touch cursor */
+  }
+}
